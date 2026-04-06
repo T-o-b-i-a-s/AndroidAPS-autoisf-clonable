@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps.openAPSAutoISF
 
 import app.aaps.core.data.aps.SMBDefaults
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.aps.GlucoseStatusAutoIsf
 import app.aaps.core.interfaces.aps.OapsProfileAutoIsf
 import app.aaps.core.interfaces.automation.AutomationStateInterface
@@ -99,7 +100,7 @@ class OpenAPSAutoISFPluginTest : TestBaseWithProfile() {
         var exerciseModeActive = false
         var resistanceModeActive = false
         val targetBg = 120.0
-        val normalTarget = 100
+        val normalTarget = Constants.NORMAL_TARGET_MGDL
         var stepActivityDetected = false
         val stepInactivityDetected = false
         whenever(preferences.get(BooleanKey.ApsActivityDetection)).thenReturn(false)
