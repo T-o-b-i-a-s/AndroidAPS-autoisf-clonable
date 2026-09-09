@@ -298,7 +298,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         rT.reason += "BG " + convert_bg(bg, profile) + "<" + convert_bg(threshold, profile);
         if ((glucose_status.delta <= 0 && minDelta <= 0) || (glucose_status.delta < expectedDelta && minDelta < expectedDelta) || bg < 60 ) {
             // BG is still falling / rising slower than predicted
-            return tempBasalFunctions.setTempBasal(0, 30, profile, rT, currenttemp);
+            return tempBasalFunctions.setTempBasal(0.5, 30, profile, rT, currenttemp);
         }
         if (glucose_status.delta > minDelta) {
             rT.reason += ", delta " + glucose_status.delta + ">0";

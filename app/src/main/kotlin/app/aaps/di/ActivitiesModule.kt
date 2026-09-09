@@ -4,6 +4,7 @@ import app.aaps.MainActivity
 import app.aaps.activities.HistoryBrowseActivity
 import app.aaps.activities.MyPreferenceFragment
 import app.aaps.activities.PreferencesActivity
+import app.aaps.activities.WizardLaunchActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -13,6 +14,7 @@ abstract class ActivitiesModule {
 
     @ContributesAndroidInjector abstract fun contributesHistoryBrowseActivity(): HistoryBrowseActivity
     @ContributesAndroidInjector abstract fun contributesMainActivity(): MainActivity
+    @ContributesAndroidInjector abstract fun contributesWizardLaunchActivity(): WizardLaunchActivity
     @ContributesAndroidInjector abstract fun contributesPreferencesActivity(): PreferencesActivity
     @ContributesAndroidInjector abstract fun contributesPreferencesFragment(): MyPreferenceFragment
 }
