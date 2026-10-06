@@ -262,10 +262,38 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                         actionBarDrawerToggle.onOptionsItemSelected(menuItem)
                 }
         }
+        handleExternalWizardIntent(intent)
         mainMenuProvider?.let { addMenuProvider(it) }
         // Setup views on 2nd and next activity start
         // On 1st start app is still initializing, start() is delayed and run from EventAppInitialized
         if (config.appInitialized) setupViews()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+          super.onNewIntent(intent)
+          setIntent(intent)
+          handleExternalWizardIntent(intent)
+    }
+
+    /**
+     * Picks up the carbs/notes extras forwarded from WizardLaunchActivity
+     * and opens the standard Bolus Wizard with the carbs field prefilled.
+     * The user still has to confirm the bolus through the regular
+     * AAPS confirmation dialog.
+     */
+    private fun handleExternalWizardIntent(intent: Intent) {
+            val carbs = intent.getIntExtra("open_wizard_carbs", 0)
+            if (carbs <= 0) return
+            val notes = intent.getStringExtra("open_wizard_notes") ?: ""
+            intent.removeExtra("open_wizard_carbs")
+            intent.removeExtra("open_wizard_notes")
+
+        app.aaps.ui.dialogs.WizardDialog().apply {
+             arguments = Bundle().apply {
+                putDouble("carbs_input", carbs.toDouble())
+                putString("notes_input", notes)
+            }
+        }.show(supportFragmentManager, "WizardDialog")
     }
 
     private fun start() {

@@ -170,9 +170,12 @@ class WizardDialog : DaggerDialogFragment() {
                     ?: 0.0, 0.0, 30.0, 0.1, DecimalFormat("0.0"), false, binding.okcancel.ok, textWatcher
             )
         }
-        binding.carbsInput.setParams(
-            savedInstanceState?.getDouble("carbs_input")
-                ?: 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
+        val initialCarbs = savedInstanceState?.getDouble("carbs_input")
+             ?: arguments?.getDouble("carbs_input", 0.0)?.takeIf { it > 0.0 }
+             ?: 0.0
+             binding.carbsInput.setParams(
+                initialCarbs, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"),
+                false, binding.okcancel.ok, textWatcher
         )
 
         // If there is no BG using % lower that 100% leads to high BGs

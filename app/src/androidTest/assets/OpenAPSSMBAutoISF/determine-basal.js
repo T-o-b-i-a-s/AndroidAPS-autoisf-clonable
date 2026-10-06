@@ -484,7 +484,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
             rT.duration = 30;
             rT.rate = 0;
             return rT;
-            //return tempBasalFunctions.setTempBasal(0, 30, profile, rT, currenttemp);
+            //return tempBasalFunctions.setTempBasal(0.5, 30, profile, rT, currenttemp);
         } else { //do nothing.
             rT.reason += ". Temp " + currenttemp.rate + " <= current basal " + round(basal, 2) + "U/hr; doing nothing. ";
             return rT;
@@ -663,7 +663,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
     rT.deliverAt = deliverAt;
     if ( microBolusAllowed && currenttemp && iob_data.lastTemp && currenttemp.rate !== iob_data.lastTemp.rate && lastTempAge > 10 && currenttemp.duration ) {
         rT.reason = "Warning: currenttemp rate "+currenttemp.rate+" != lastTemp rate "+iob_data.lastTemp.rate+" from pumphistory; canceling temp";
-        return tempBasalFunctions.setTempBasal(0, 0, profile, rT, currenttemp);
+        return tempBasalFunctions.setTempBasal(0.5, 0, profile, rT, currenttemp);
     }
     if ( currenttemp && iob_data.lastTemp && currenttemp.duration > 0 ) {
         // TODO: fix this (lastTemp.duration is how long it has run; currenttemp.duration is time left
@@ -676,7 +676,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         if ( lastTempEnded > 5 && lastTempAge > 10 ) {
             rT.reason = "Warning: currenttemp running but lastTemp from pumphistory ended "+lastTempEnded+"m ago; canceling temp";
             //console.error(currenttemp, round(iob_data.lastTemp,1), round(lastTempAge,1));
-            return tempBasalFunctions.setTempBasal(0, 0, profile, rT, currenttemp);
+            return tempBasalFunctions.setTempBasal(0.5, 0, profile, rT, currenttemp);
         }
         // TODO: figure out a way to do this check that doesn't fail across basal schedule boundaries
         //if ( tempModulus < 25 && tempModulus > 5 ) {
@@ -1261,14 +1261,14 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         durationReq = round(durationReq/30)*30;
         // always set a 30-120m zero temp (oref0-pump-loop will let any longer SMB zero temp run)
         durationReq = Math.min(120,Math.max(30,durationReq));
-        return tempBasalFunctions.setTempBasal(0, durationReq, profile, rT, currenttemp);
+        return tempBasalFunctions.setTempBasal(0.5, durationReq, profile, rT, currenttemp);
     }
 
     // if not in LGS mode, cancel temps before the top of the hour to reduce beeping/vibration
     // console.error(profile.skip_neutral_temps, rT.deliverAt.getMinutes());
     if ( profile.skip_neutral_temps && rT.deliverAt.getMinutes() >= 55 ) {
         rT.reason += "; Canceling temp at " + rT.deliverAt.getMinutes() + "m past the hour. ";
-        return tempBasalFunctions.setTempBasal(0, 0, profile, rT, currenttemp);
+        return tempBasalFunctions.setTempBasal(0.5, 0, profile, rT, currenttemp);
     }
 
     if (eventualBG < min_bg) { // if eventual BG is below target:
@@ -1278,7 +1278,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
             // if naive_eventualBG < 40, set a 30m zero temp (oref0-pump-loop will let any longer SMB zero temp run)
             if (naive_eventualBG < 40) {
                 rT.reason += ", naive_eventualBG < 40. ";
-                return tempBasalFunctions.setTempBasal(0, 30, profile, rT, currenttemp);
+                return tempBasalFunctions.setTempBasal(0.5, 30, profile, rT, currenttemp);
             }
             if (glucose_status.delta > minDelta) {
                 rT.reason += ", but Delta " + convert_bg(tick, profile) + " > expectedDelta " + convert_bg(expectedDelta, profile);
